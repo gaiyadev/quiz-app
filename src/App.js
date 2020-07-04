@@ -1,11 +1,15 @@
 import React from 'react';
 import './App.css';
+import Home from './components/Home';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="App">
-      <button className="btn btn-danger">h</button>
-    </div>
+    <Router>
+      <Route path="/" component={Home} />
+    </Router>
+
+
   );
 }
 
