@@ -1,12 +1,16 @@
 import React from 'react';
 import './App.css';
-import Home from './components/Home';
+import Home from './components/Home/Home';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import quizIntruction from './components/Quiz/Instructions/Instruction';
 
 function App() {
   return (
     <Router>
-      <Route path="/" component={Home} />
+      <div className="App">
+        <Route path="/" exact component={Home} />
+        <Route path="/play/instructions" exact component={quizIntruction} />
+      </div>
     </Router>
 
 

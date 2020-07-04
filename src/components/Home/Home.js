@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom';
+import '../../components/Home/Home.css';
 
 const Home = (props) => (
     <Fragment>
@@ -17,18 +18,18 @@ const Home = (props) => (
                         </h5>
                         <div className="card-body">
                             <h5 className="card-title">
-                                <button className="btn btn-danger btn-lg btn-block">
-                                    <Link to="/play/instructions"></Link>
+                                <Link to="/play/instructions"> <button className="btn btn-danger btn-lg btn-block">
                                     Play
                                 </button>
+                                </Link>
                             </h5>
                             <p className="card-text">Click play to start the quiz</p>
-                            <button className="btn btn-info btn-lg mx-4 mt-3">
-                                <Link to="/login" ></Link >Sign in
-                            </button>
-                            <button className="btn btn-primary btn-lg mx-4 mt-3">
-                                <Link to="/register"></Link >Sign up
-                            </button>
+                            <Link to="/login" > <button className="btn btn-info btn-lg mx-4 mt-3">
+                                Sign in
+                            </button></Link >
+                            <Link to="/register"> <button className="btn btn-primary btn-lg mx-4 mt-3">
+                                Sign up
+                            </button> </Link >
                         </div>
                     </div>
                 </div>
@@ -36,7 +37,7 @@ const Home = (props) => (
             </div>
 
         </div>
-    </Fragment>
+    </Fragment >
 );
 
 export default Home;
