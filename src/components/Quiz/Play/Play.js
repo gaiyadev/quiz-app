@@ -51,7 +51,12 @@ class Play extends React.Component {
             currentQuestionIndex: preState.currentQuestionIndex + 1,
             numberOfAnsweredQuestions: preState.numberOfAnsweredQuestions + 1,
         }), () => {
-            this.displayQuestions(this.state.questions, this.state.currentQuestion, this.state.nextQuestion, this.state.previousQuestion);
+            this.displayQuestions(
+                this.state.questions,
+                this.state.currentQuestion,
+                this.state.nextQuestion,
+                this.state.previousQuestion
+            );
         });
     }
 
@@ -63,7 +68,12 @@ class Play extends React.Component {
             currentQuestionIndex: preState.currentQuestionIndex + 1,
             numberOfAnsweredQuestions: preState.numberOfAnsweredQuestions + 1
         }), () => {
-            this.displayQuestions(this.state.questions, this.state.currentQuestion, this.state.nextQuestion, this.state.previousQuestion);
+            this.displayQuestions(
+                this.state.questions,
+                this.state.currentQuestion,
+                this.state.nextQuestion,
+                this.state.previousQuestion
+            );
         });
     }
 
@@ -79,15 +89,18 @@ class Play extends React.Component {
                 currentQuestion: currentQuestion,
                 nextQuestion: nextQuestion,
                 previousQuestion: previousQuestion,
-                // numberOfQuestions: questions.length,
+                numberOfQuestions: questions.length,
                 answer: answer,
                 // previousRandomNumbers: []
             });
         }
     };
 
+    handleButtonClick = () => {
+
+    }
     render() {
-        const { currentQuestion } = this.state;
+        const { currentQuestion, currentQuestionIndex, numberOfQuestions } = this.state;
         return (
             < div >
                 <Helmet>
@@ -104,7 +117,7 @@ class Play extends React.Component {
                             </div>
 
                             <p >
-                                <span style={{ float: 'left' }}>1/25</span><br />
+                                <span style={{ float: 'left' }}>{currentQuestionIndex + 1} of {numberOfQuestions}</span><br />
                                 <span style={{ float: 'right' }} >25:00</span>
                             </p>
                             <h5>{currentQuestion.question}</h5>
@@ -117,9 +130,9 @@ class Play extends React.Component {
                                 <span> <button onClick={this.handleOptionClick} className="btn btn-primary btn-block  btn-lg  mt-4">{currentQuestion.optionD}</button> </span><br />
                             </div>
                             <div className="Buttons mt-5">
-                                <button className="btn btn-primary ">Previous</button>&nbsp;&nbsp;&nbsp;
-                                <button className="btn btn-danger">Quite</button>&nbsp;&nbsp;&nbsp;
-                                <button className="btn btn-info " >Next</button>&nbsp;&nbsp;&nbsp;
+                                <button onClick={this.state.handleButtonClick} className="btn btn-primary ">Previous</button>&nbsp;&nbsp;&nbsp;
+                                <button onClick={this.state.handleButtonClick} className="btn btn-danger">Quite</button>&nbsp;&nbsp;&nbsp;
+                                <button onClick={this.state.handleButtonClick} className="btn btn-info " >Next</button>&nbsp;&nbsp;&nbsp;
                             </div>
                         </div>
                         <div className="col-md-2"></div>
