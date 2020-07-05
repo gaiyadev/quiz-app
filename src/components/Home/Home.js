@@ -1,10 +1,10 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom';
 import '../../components/Home/Home.css';
 
-const Home = (props) => (
-    <Fragment>
+const Home = () => (
+    <div>
         <Helmet>
             <title>Quiz App - home</title>
         </Helmet>
@@ -37,7 +37,7 @@ const Home = (props) => (
             </div>
 
         </div>
-    </Fragment >
+    </div >
 );
 
 export default Home;

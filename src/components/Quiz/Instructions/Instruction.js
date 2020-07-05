@@ -1,11 +1,11 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import '../../Quiz/Instructions/Instruction.css';
 
 const quizInstructions = () => {
     return (
-        <Fragment>
+        <div>
             <Helmet>
                 <title>Quiz Intructions</title>
             </Helmet>
@@ -26,7 +26,7 @@ const quizInstructions = () => {
                     <div className="col-md-2"></div>
                 </div>
             </div>
-        </Fragment>
+        </div>
     );
 }
 
