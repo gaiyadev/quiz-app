@@ -1,5 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import questions from '../../../../src/Questions/Questions.json';
 import isEmpty from '../../../../src/utils/Empty';
 
@@ -44,7 +46,11 @@ class Play extends React.Component {
     }
 
     correctAnswer = () => {
-        console.log('right anwser');
+        toast.success("Correct answer", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 1000
+
+        });
         this.setState(preState => ({
             score: preState.score + 1,
             correctAnswers: preState.correctAnswers + 1,
@@ -62,7 +68,10 @@ class Play extends React.Component {
 
     wrongAnswer = () => {
         navigator.vibrate(1000);
-        console.log('wrong answer');
+        toast.error("Wrong answer", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 1000
+        });
         this.setState(preState => ({
             wrongAnswers: preState.wrongAnswers + 1,
             currentQuestionIndex: preState.currentQuestionIndex + 1,
@@ -96,21 +105,40 @@ class Play extends React.Component {
         }
     };
 
+    handleQuitButtonClick = () => {
+        if (window.confirm('Are you sure you want to quit?')) {
+            this.props.history.push('/');
+        }
+    };
     handleButtonClick = (event) => {
         switch (event.target.id) {
-            case 'next-btn':
+            case 'next-button':
                 this.handleNextButtonClick();
                 break;
-            case 'previous-btn':
-                // this.handleNextButtonClick();
+
+            case 'previous-button':
+                this.handlePreviousButtonClick();
                 break;
-            case 'quit-btn':
+
+            case 'quit-button':
+                this.handleQuitButtonClick();
                 break;
 
             default:
                 break;
         }
-    }
+
+    };
+
+    handlePreviousButtonClick = () => {
+        if (this.state.previousQuestion !== undefined) {
+            this.setState(prevState => ({
+                currentQuestionIndex: prevState.currentQuestionIndex - 1
+            }), () => {
+                this.displayQuestions(this.state.state, this.state.currentQuestion, this.state.nextQuestion, this.state.previousQuestion);
+            });
+        }
+    };
 
     handleNextButtonClick = () => {
         if (this.state.nextQuestion !== undefined) {
@@ -121,6 +149,7 @@ class Play extends React.Component {
             });
         }
     }
+
     render() {
         const { currentQuestion, currentQuestionIndex, numberOfQuestions } = this.state;
         return (
@@ -152,9 +181,10 @@ class Play extends React.Component {
                                 <span> <button onClick={this.handleOptionClick} className="btn btn-primary btn-block  btn-lg  mt-4">{currentQuestion.optionD}</button> </span><br />
                             </div>
                             <div className="Buttons mt-5">
-                                <button id="previous-btn" onClick={this.state.handleButtonClick} className="btn btn-primary ">Previous</button>&nbsp;&nbsp;&nbsp;
-                                <button id="quit-btn" onClick={this.state.handleButtonClick} className="btn btn-danger">Quite</button>&nbsp;&nbsp;&nbsp;
-                                <button id="next-btn" onClick={this.state.handleButtonClick} className="btn btn-info " >Next</button>&nbsp;&nbsp;&nbsp;
+                                <button id="previous-button" onClick={this.handleButtonClick} className="btn btn-primary ">Previous</button>&nbsp;&nbsp;&nbsp;
+                                <button id="quit-button" onClick={this.handleButtonClick} className="btn btn-danger">Quite</button>&nbsp;&nbsp;&nbsp;
+                                <button id="next-button" onClick={this.handleButtonClick} className="btn btn-info " >Next</button>&nbsp;&nbsp;&nbsp;
+                            <ToastContainer />
                             </div>
                         </div>
                         <div className="col-md-2"></div>
