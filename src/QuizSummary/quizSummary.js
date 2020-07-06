@@ -46,48 +46,56 @@ class QuizSummary extends React.Component {
         } else {
             remark = 'You\'re an absolute genius!';
         }
-
+        const right = {
+            float: 'right',
+            //  fontSize: '29px'
+        }
         if (state !== undefined) {
             stats = (
                 <React.Fragment>
-                    <div className="cards shadow-lg p-3 mb-5  rounded mt-5">
-                        <div style={{ textAlign: 'center', color: 'white', fontSize: '25px' }}>
-                            <i className="fa fa-thumbs-up fa-lg" ></i>
+                    <div className="container-fluid">
+                        <div className="row">
+                            <div className="col-md-2"></div>
+                            <div className="col-md-8">
+                                <div className="cards shadow-lg p-3 mb-5  rounded mt-5 bg-primary pl-4 pr-4 pt-4 pb-4">
+                                    <div style={{ textAlign: 'center', color: 'white', fontSize: '25px' }}>
+                                        <i className="fa fa-thumbs-up fa-lg" ></i>
+                                    </div>
+                                    <h1 className="text-white">Quiz has ended</h1>
+                                    <div className="stats text-white">
+                                        <h4>{remark}</h4>
+                                        <h2>Your Score: {this.state.score.toFixed(0)}&#37;</h2>
+                                        <span className="stat left">Total number of questions: </span>
+                                        <span style={right}>{this.state.numberOfQuestions}</span><br />
+
+                                        <span className="stat left">Number of attempted questions: </span>
+                                        <span style={right}>{this.state.numberOfAnsweredQuestions}</span><br />
+
+                                        <span className="stat left">Number of Correct Answers: </span>
+                                        <span style={right}>{this.state.correctAnswers}</span> <br />
+
+                                        <span className="stat left">Number of Wrong Answers: </span>
+                                        <span style={right}>{this.state.wrongAnswers}</span><br />
+
+                                        <span className="stat left">Hints Used: </span>
+                                        <span style={right}>{this.state.hintsUsed}</span><br />
+
+                                        <span className="stat left">50-50 Used: </span>
+                                        <span className="right">{this.state.fiftyFiftyUsed}</span>
+                                    </div>
+                                    <section>
+                                        <Link to="/play/quiz">
+                                            <button className="btn btn-success ml-4 mt-3">Play Again</button>
+                                        </Link>
+                                        <Link to="/">
+                                            <button className="btn btn-info ml-4 mt-3">Back to Home</button>
+                                        </Link>
+
+                                    </section>
+                                </div>
+                            </div>
+                            <div className="col-md-2"></div>
                         </div>
-                        <h1 className="text-white">Quiz has ended</h1>
-                        <div className="container stats text-white">
-                            <h4>{remark}</h4>
-                            <h2>Your Score: {this.state.score.toFixed(0)}&#37;</h2>
-                            <span className="stat left">Total number of questions: </span>
-                            <span className="right">{this.state.numberOfQuestions}</span><br />
-
-                            <span className="stat left">Number of attempted questions: </span>
-                            <span className="right">{this.state.numberOfAnsweredQuestions}</span><br />
-
-                            <span className="stat left">Number of Correct Answers: </span>
-                            <span className="right">{this.state.correctAnswers}</span> <br />
-
-                            <span className="stat left">Number of Wrong Answers: </span>
-                            <span className="right">{this.state.wrongAnswers}</span><br />
-
-                            <span className="stat left">Hints Used: </span>
-                            <span className="right">{this.state.hintsUsed}</span><br />
-
-                            <span className="stat left">50-50 Used: </span>
-                            <span className="right">{this.state.fiftyFiftyUsed}</span>
-                        </div>
-                        <section>
-
-                            <Link to="/play/quiz">
-                                <button className="btn btn-primary ml-4 mt-3">Play Again</button>
-                            </Link>
-
-
-                            <Link to="/">
-                                <button className="btn btn-info ml-4 mt-3">Back to Home</button>
-                            </Link>
-
-                        </section>
                     </div>
                 </React.Fragment>
             );

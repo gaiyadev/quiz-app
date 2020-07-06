@@ -68,18 +68,23 @@ class Play extends React.Component {
             autoClose: 1000
 
         });
-        this.setState(preState => ({
-            score: preState.score + 1,
-            correctAnswers: preState.correctAnswers + 1,
-            currentQuestionIndex: preState.currentQuestionIndex + 1,
-            numberOfAnsweredQuestions: preState.numberOfAnsweredQuestions + 1,
+        this.setState(prevState => ({
+            score: prevState.score + 1,
+            correctAnswers: prevState.correctAnswers + 1,
+            currentQuestionIndex: prevState.currentQuestionIndex + 1,
+            numberOfAnsweredQuestions: prevState.numberOfAnsweredQuestions + 1
         }), () => {
-            this.displayQuestions(
-                this.state.questions,
-                this.state.currentQuestion,
-                this.state.nextQuestion,
-                this.state.previousQuestion
-            );
+            if (this.state.nextQuestion === undefined) {
+                this.endGame();
+            } else {
+                this.displayQuestions(
+                    this.state.questions,
+                    this.state.currentQuestion,
+                    this.state.nextQuestion,
+                    this.state.previousQuestion
+                );
+            }
+
         });
     }
 
@@ -116,11 +121,11 @@ class Play extends React.Component {
             previousQuestion = questions[currentQuestionIndex - 1];
             const answer = currentQuestion.answer;
             this.setState({
-                currentQuestion: currentQuestion,
-                nextQuestion: nextQuestion,
-                previousQuestion: previousQuestion,
+                currentQuestion,
+                nextQuestion,
+                previousQuestion,
                 numberOfQuestions: questions.length,
-                answer: answer,
+                answer,
                 previousRandomNumbers: []
             }, () => {
                 this.showOptions();
@@ -307,7 +312,7 @@ class Play extends React.Component {
             fiftyFiftyUsed: 2 - state.fiftyFifty,
             hintsUsed: 5 - state.hints
         };
-        console.log(playerStats);
+        // console.log(playerStats);
         setTimeout(() => {
             this.props.history.push('/play/quizSummary', playerStats);
         }, 1000);
@@ -358,7 +363,7 @@ class Play extends React.Component {
                     <div className="row">
                         <div className="col-md-2"></div>
                         <div className="col-md-8">
-                            <h2>Quiz mode</h2>
+                            <h2>Quiz Time</h2>
                             <div className="Life-Line">
                                 <span style={{ float: 'left' }} ><i onClick={this.handleHints} className="fa fa-lightbulb"></i>&nbsp;{hints}&nbsp; (Hint)</span><br />
                                 <span className="lifeLine" style={{ float: 'right' }} > <i onClick={this.handleFiftyFifty} className="fa fa-toggle-off"></i> {fiftyFifty}&nbsp;(50/50) </span><br />
