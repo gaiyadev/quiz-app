@@ -12,7 +12,7 @@ class Play extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: 'QUiz app',
+            title: 'Quiz application',
             questions: questions,
             currentQuestion: {},
             nextQuestion: {},
@@ -173,9 +173,9 @@ class Play extends React.Component {
         options.forEach(option => {
             option.style.visibility = 'visible';
         });
-        // this.setState({
-        //     usedFiftyFifty: false
-        // });
+        this.setState({
+            usedFiftyFifty: false
+        });
     }
 
 
@@ -270,7 +270,7 @@ class Play extends React.Component {
                             <h2>Quiz mode</h2>
                             <div className="Life-Line">
                                 <span style={{ float: 'left' }} ><i onClick={this.handleHints} className="fa fa-lightbulb"></i>&nbsp;{hints}</span><br />
-                                <span className="lifeLine" style={{ float: 'right' }} > <i onClick={this.fiftyFifty} className="fa fa-toggle-off"></i> {fiftyFifty} </span><br />
+                                <span className="lifeLine" style={{ float: 'right' }} > <i onClick={this.handleFiftyFifty} className="fa fa-toggle-off"></i> {fiftyFifty} </span><br />
                             </div>
 
                             <p >

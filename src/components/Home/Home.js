@@ -14,7 +14,7 @@ const Home = () => (
                 <div className="col-md-8 mt-5">
                     <div className="card text-center text-white bg-success shadow-lg p-3 mb-5  rounded">
                         <h5 className="card-header ">
-                            <span className="mdi mdi-cube-outline" >QuizApp</span>
+                            <span className="mdi mdi-cube-outline" >Quiz Application</span>
                         </h5>
                         <div className="card-body">
                             <h5 className="card-title">
