@@ -50,11 +50,11 @@ class QuizSummary extends React.Component {
         if (state !== undefined) {
             stats = (
                 <React.Fragment>
-                    <div className="cards">
+                    <div className="cards shadow-lg p-3 mb-5  rounded mt-5">
                         <div style={{ textAlign: 'center', color: 'white', fontSize: '25px' }}>
-                            <i class="fa fa-thumbs-up fa-lg" ></i>
+                            <i className="fa fa-thumbs-up fa-lg" ></i>
                         </div>
-                        <h1>Quiz has ended</h1>
+                        <h1 className="text-white">Quiz has ended</h1>
                         <div className="container stats text-white">
                             <h4>{remark}</h4>
                             <h2>Your Score: {this.state.score.toFixed(0)}&#37;</h2>
@@ -77,14 +77,16 @@ class QuizSummary extends React.Component {
                             <span className="right">{this.state.fiftyFiftyUsed}</span>
                         </div>
                         <section>
-                            <ul>
-                                <li>
-                                    <Link to="/play/quiz">Play Again</Link>
-                                </li>
-                                <li>
-                                    <Link to="/">Back to Home</Link>
-                                </li>
-                            </ul>
+
+                            <Link to="/play/quiz">
+                                <button className="btn btn-primary ml-4 mt-3">Play Again</button>
+                            </Link>
+
+
+                            <Link to="/">
+                                <button className="btn btn-info ml-4 mt-3">Back to Home</button>
+                            </Link>
+
                         </section>
                     </div>
                 </React.Fragment>
