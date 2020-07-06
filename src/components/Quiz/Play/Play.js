@@ -4,6 +4,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import questions from '../../../../src/Questions/Questions.json';
 import isEmpty from '../../../../src/utils/Empty';
+import correctSound from '../../../sounds/correct.mp3'
+import wrongSound from '../../../sounds/wrong.mp3'
+import exitSound from '../../../sounds/exit.mp3'
 
 class Play extends React.Component {
     constructor(props) {
@@ -39,8 +42,14 @@ class Play extends React.Component {
 
     handleOptionClick = (event) => {
         if (event.target.innerHTML.toLowerCase() === this.state.answer.toLowerCase()) {
+            setTimeout(() => {
+                document.getElementById('correct').play();
+            }, 500);
             this.correctAnswer();
         } else {
+            setTimeout(() => {
+                document.getElementById('wrong').play();
+            }, 500);
             this.wrongAnswer();
         }
     }
@@ -100,16 +109,25 @@ class Play extends React.Component {
                 previousQuestion: previousQuestion,
                 numberOfQuestions: questions.length,
                 answer: answer,
-                // previousRandomNumbers: []
+                previousRandomNumbers: []
+            }, () => {
+                this.showOptions();
             });
         }
     };
 
     handleQuitButtonClick = () => {
+        this.playButtonSound();
         if (window.confirm('Are you sure you want to quit?')) {
             this.props.history.push('/');
         }
     };
+
+
+    playButtonSound = () => {
+        document.getElementById('exit').play();
+    };
+
     handleButtonClick = (event) => {
         switch (event.target.id) {
             case 'next-button':
@@ -150,26 +168,114 @@ class Play extends React.Component {
         }
     }
 
+    showOptions = () => {
+        const options = Array.from(document.querySelectorAll('.btn'));
+        options.forEach(option => {
+            option.style.visibility = 'visible';
+        });
+        // this.setState({
+        //     usedFiftyFifty: false
+        // });
+    }
+
+
+    handleHints = () => {
+        if (this.state.hints > 0) {
+            const options = Array.from(document.querySelectorAll('.btn'));
+            let indexOfAnswer;
+            options.forEach((option, index) => {
+                if (option.innerHTML.toLowerCase() === this.state.answer.toLowerCase()) {
+                    indexOfAnswer = index;
+                }
+            });
+
+            while (true) {
+                const randomNumber = Math.round(Math.random() * 3);
+                if (randomNumber !== indexOfAnswer && !this.state.previousRandomNumbers.includes(randomNumber)) {
+                    options.forEach((option, index) => {
+                        if (index === randomNumber) {
+                            option.style.visibility = 'hidden';
+                            this.setState((prevState) => ({
+                                hints: prevState.hints - 1,
+                                previousRandomNumbers: prevState.previousRandomNumbers.concat(randomNumber)
+                            }));
+                        }
+                    });
+                    break;
+                }
+                if (this.state.previousRandomNumbers.length >= 3) break;
+            }
+        }
+    }
+
+    handleFiftyFifty = () => {
+        if (this.state.fiftyFifty > 0 && this.state.usedFiftyFifty === false) {
+            const options = document.querySelectorAll('.btn');
+            const randomNumbers = [];
+            let indexOfAnswer;
+            options.forEach((option, index) => {
+                if (option.innerHTML.toLowerCase() === this.state.answer.toLowerCase()) {
+                    indexOfAnswer = index;
+                }
+            });
+
+            let count = 0;
+            do {
+                const randomNumber = Math.round(Math.random() * 3);
+                if (randomNumber !== indexOfAnswer) {
+                    if (randomNumbers.length < 2 && !randomNumbers.includes(randomNumber) && !randomNumbers.includes(indexOfAnswer)) {
+                        randomNumbers.push(randomNumber);
+                        count++;
+                    } else {
+                        while (true) {
+                            const newRandomNumber = Math.round(Math.random() * 3);
+                            if (!randomNumbers.includes(newRandomNumber) && newRandomNumber !== indexOfAnswer) {
+                                randomNumbers.push(newRandomNumber);
+                                count++;
+                                break;
+                            }
+                        }
+                    }
+                }
+            } while (count < 2);
+
+            options.forEach((option, index) => {
+                if (randomNumbers.includes(index)) {
+                    option.style.visibility = 'hidden';
+                }
+            });
+            this.setState(prevState => ({
+                fiftyFifty: prevState.fiftyFifty - 1,
+                usedFiftyFifty: true
+            }));
+        }
+    }
+
     render() {
-        const { currentQuestion, currentQuestionIndex, numberOfQuestions } = this.state;
+        const { currentQuestion, currentQuestionIndex, numberOfQuestions, hints, fiftyFifty } = this.state;
         return (
             < div >
                 <Helmet>
                     <title>{this.state.title}</title>
                 </Helmet>
+                <React.Fragment>
+                    <audio id="correct" src={correctSound} ></audio>
+                    <audio id="wrong" src={wrongSound} ></audio>
+                    <audio id="exit" src={exitSound} ></audio>
+                </React.Fragment>
                 <div className="container-fluid text-white mt-5">
                     <div className="row">
                         <div className="col-md-2"></div>
                         <div className="col-md-8">
                             <h2>Quiz mode</h2>
                             <div className="Life-Line">
-                                <span style={{ float: 'left' }} >life line2</span><br />
-                                <span style={{ float: 'right' }} >Hint2</span>
+                                <span style={{ float: 'left' }} ><i onClick={this.handleHints} className="fa fa-lightbulb"></i>&nbsp;{hints}</span><br />
+                                <span className="lifeLine" style={{ float: 'right' }} > <i onClick={this.fiftyFifty} className="fa fa-toggle-off"></i> {fiftyFifty} </span><br />
                             </div>
 
                             <p >
                                 <span style={{ float: 'left' }}>{currentQuestionIndex + 1} of {numberOfQuestions}</span><br />
-                                <span style={{ float: 'right' }} >25:00</span>
+                                <span style={{ float: 'right' }} > <i className="far fa-clock"></i> 25:00</span>
                             </p>
                             <h5>{currentQuestion.question}</h5>
                             <div className="OPtions">
