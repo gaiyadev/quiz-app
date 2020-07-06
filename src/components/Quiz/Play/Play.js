@@ -96,8 +96,30 @@ class Play extends React.Component {
         }
     };
 
-    handleButtonClick = () => {
+    handleButtonClick = (event) => {
+        switch (event.target.id) {
+            case 'next-btn':
+                this.handleNextButtonClick();
+                break;
+            case 'previous-btn':
+                // this.handleNextButtonClick();
+                break;
+            case 'quit-btn':
+                break;
 
+            default:
+                break;
+        }
+    }
+
+    handleNextButtonClick = () => {
+        if (this.state.nextQuestion !== undefined) {
+            this.setState(preState => ({
+                currentQuestionIndex: preState.currentQuestionIndex + 1
+            }), () => {
+                this.displayQuestions(this.state.state, this.state.currentQuestion, this.state.nextQuestion, this.state.previousQuestion);
+            });
+        }
     }
     render() {
         const { currentQuestion, currentQuestionIndex, numberOfQuestions } = this.state;
@@ -130,9 +152,9 @@ class Play extends React.Component {
                                 <span> <button onClick={this.handleOptionClick} className="btn btn-primary btn-block  btn-lg  mt-4">{currentQuestion.optionD}</button> </span><br />
                             </div>
                             <div className="Buttons mt-5">
-                                <button onClick={this.state.handleButtonClick} className="btn btn-primary ">Previous</button>&nbsp;&nbsp;&nbsp;
-                                <button onClick={this.state.handleButtonClick} className="btn btn-danger">Quite</button>&nbsp;&nbsp;&nbsp;
-                                <button onClick={this.state.handleButtonClick} className="btn btn-info " >Next</button>&nbsp;&nbsp;&nbsp;
+                                <button id="previous-btn" onClick={this.state.handleButtonClick} className="btn btn-primary ">Previous</button>&nbsp;&nbsp;&nbsp;
+                                <button id="quit-btn" onClick={this.state.handleButtonClick} className="btn btn-danger">Quite</button>&nbsp;&nbsp;&nbsp;
+                                <button id="next-btn" onClick={this.state.handleButtonClick} className="btn btn-info " >Next</button>&nbsp;&nbsp;&nbsp;
                             </div>
                         </div>
                         <div className="col-md-2"></div>
