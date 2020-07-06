@@ -21,7 +21,7 @@ const quizInstructions = () => {
                             <li>list 3</li>
                         </ul>
                         <Link className="btn btn-danger mx-4" to="/">No take me back home</Link>
-                        <Link className="btn btn-primary mx-4" to="/play">let's do this</Link>
+                        <Link className="btn btn-primary mx-4" to="/play/quiz">let's do this</Link>
                     </div>
                     <div className="col-md-2"></div>
                 </div>

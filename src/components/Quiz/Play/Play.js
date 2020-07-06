@@ -30,14 +30,22 @@ class Play extends React.Component {
             nextButtonDisabled: false,
             previousButtonDisabled: true,
             previousRandomNumbers: [],
-            time: {}
+            time: {
+                minutes: 0,
+                seconds: 0
+            }
         };
+        this.interval = null
     }
 
     componentDidMount() {
         const { questions, currentQuestion, nextQuestion, previousQuestion } = this.state;
         this.displayQuestions(questions, currentQuestion, nextQuestion, previousQuestion);
-        // this.startTimer();
+        this.startTimer();
+    }
+    //WARNING! To be deprecated in React v17. Use componentDidMount instead.
+    componentWillMount() {
+        clearInterval(this.interval);
     }
 
     handleOptionClick = (event) => {
@@ -86,12 +94,16 @@ class Play extends React.Component {
             currentQuestionIndex: preState.currentQuestionIndex + 1,
             numberOfAnsweredQuestions: preState.numberOfAnsweredQuestions + 1
         }), () => {
-            this.displayQuestions(
-                this.state.questions,
-                this.state.currentQuestion,
-                this.state.nextQuestion,
-                this.state.previousQuestion
-            );
+            if (this.state.nextQuestion === undefined) {
+                this.endGame();
+            } else {
+                this.displayQuestions(
+                    this.state.questions,
+                    this.state.currentQuestion,
+                    this.state.nextQuestion,
+                    this.state.previousQuestion
+                );
+            }
         });
     }
 
@@ -112,6 +124,7 @@ class Play extends React.Component {
                 previousRandomNumbers: []
             }, () => {
                 this.showOptions();
+                this.handleDisableButton();
             });
         }
     };
@@ -250,9 +263,87 @@ class Play extends React.Component {
             }));
         }
     }
+    //timer method
+    startTimer = () => {
+        const countDownTime = Date.now() + 180000; //timer
+        this.interval = setInterval(() => {
+            const now = new Date();
+            const distance = countDownTime - now;
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            if (distance < 0) {
+                clearInterval(this.interval);
+                this.setState({
+                    time: {
+                        minutes: 0,
+                        seconds: 0
+                    }
+                }, () => {
+                    this.endGame();
+                    this.props.history.push('/')
+                });
+            } else {
+                this.setState({
+                    time: {
+                        minutes: minutes,
+                        seconds: seconds,
+                        distance: distance
+                    }
+                });
+            }
+        }, 1000);
+    }
+
+    endGame = () => {
+        alert('Quiz has ended!');
+        const { state } = this;
+        const playerStats = {
+            score: state.score,
+            numberOfQuestions: state.numberOfQuestions,
+            numberOfAnsweredQuestions: state.correctAnswers + state.wrongAnswers,
+            correctAnswers: state.correctAnswers,
+            wrongAnswers: state.wrongAnswers,
+            fiftyFiftyUsed: 2 - state.fiftyFifty,
+            hintsUsed: 5 - state.hints
+        };
+        console.log(playerStats);
+        setTimeout(() => {
+            this.props.history.push('/play/quizSummary', playerStats);
+        }, 1000);
+    }
+
+
+    //disabling button
+    handleDisableButton = () => {
+        if (this.state.previousQuestion === undefined || this.state.currentQuestionIndex === 0) {
+            this.setState({
+                previousButtonDisabled: true
+            });
+        } else {
+            this.setState({
+                previousButtonDisabled: false
+            });
+        }
+
+        if (this.state.nextQuestion === undefined || this.state.currentQuestionIndex + 1 === this.state.numberOfQuestions) {
+            this.setState({
+                nextButtonDisabled: true
+            });
+        } else {
+            this.setState({
+                nextButtonDisabled: false
+            });
+        }
+    }
 
     render() {
-        const { currentQuestion, currentQuestionIndex, numberOfQuestions, hints, fiftyFifty } = this.state;
+        const {
+            currentQuestion,
+            currentQuestionIndex,
+            numberOfQuestions,
+            hints, fiftyFifty, time
+        } = this.state;
         return (
             < div >
                 <Helmet>
@@ -269,13 +360,13 @@ class Play extends React.Component {
                         <div className="col-md-8">
                             <h2>Quiz mode</h2>
                             <div className="Life-Line">
-                                <span style={{ float: 'left' }} ><i onClick={this.handleHints} className="fa fa-lightbulb"></i>&nbsp;{hints}</span><br />
-                                <span className="lifeLine" style={{ float: 'right' }} > <i onClick={this.handleFiftyFifty} className="fa fa-toggle-off"></i> {fiftyFifty} </span><br />
+                                <span style={{ float: 'left' }} ><i onClick={this.handleHints} className="fa fa-lightbulb"></i>&nbsp;{hints}&nbsp; (Hint)</span><br />
+                                <span className="lifeLine" style={{ float: 'right' }} > <i onClick={this.handleFiftyFifty} className="fa fa-toggle-off"></i> {fiftyFifty}&nbsp;(50/50) </span><br />
                             </div>
 
                             <p >
                                 <span style={{ float: 'left' }}>{currentQuestionIndex + 1} of {numberOfQuestions}</span><br />
-                                <span style={{ float: 'right' }} > <i className="far fa-clock"></i> 25:00</span>
+                                <span style={{ float: 'right' }} > <i className="far fa-clock"></i>{time.minutes}: {time.seconds} </span>
                             </p>
                             <h5>{currentQuestion.question}</h5>
                             <div className="OPtions">
@@ -287,9 +378,19 @@ class Play extends React.Component {
                                 <span> <button onClick={this.handleOptionClick} className="btn btn-primary btn-block  btn-lg  mt-4">{currentQuestion.optionD}</button> </span><br />
                             </div>
                             <div className="Buttons mt-5">
-                                <button id="previous-button" onClick={this.handleButtonClick} className="btn btn-primary ">Previous</button>&nbsp;&nbsp;&nbsp;
-                                <button id="quit-button" onClick={this.handleButtonClick} className="btn btn-danger">Quite</button>&nbsp;&nbsp;&nbsp;
-                                <button id="next-button" onClick={this.handleButtonClick} className="btn btn-info " >Next</button>&nbsp;&nbsp;&nbsp;
+                                <button id="previous-button"
+                                    onClick={this.handleButtonClick}
+                                    disabled={this.state.previousButtonDisabled}
+                                    className="btn btn-primary ">Previous</button>&nbsp;&nbsp;&nbsp;
+
+                                <button id="quit-button"
+                                    onClick={this.handleButtonClick}
+                                    className="btn btn-danger">Quit</button>&nbsp;&nbsp;&nbsp;
+
+                                <button id="next-button"
+                                    onClick={this.handleButtonClick}
+                                    disabled={this.state.nextButtonDisabled}
+                                    className="btn btn-info " >Next</button>&nbsp;&nbsp;&nbsp;
                             <ToastContainer />
                             </div>
                         </div>
